@@ -1,7 +1,7 @@
 .venv
 aws/
-bronze/
-silver/
+*.tcx
+!data/exampledata/*.tcx
 .terraform/
 *.tfstate
 *.tfstate.*
