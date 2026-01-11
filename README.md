@@ -1,136 +1,110 @@
-# COROS Training & Recovery Analysis (Data Engineering MVP)
+Personal Finance Analysis Platform
 
-## Overview
+Data Engineering MVP
 
-This project analyzes running activity data collected from a COROS watch to understand how work schedule (day shift vs night shift) impacts training performance and recovery.
+Overview
 
-The goal is to build an end-to-end, cloud-based data pipeline that ingests raw activity files, cleans and structures the data, stores it in analytics-ready formats, and answers real-world performance questions using SQL and dashboards.
+This project is an end-to-end cloud-based data engineering pipeline for analyzing personal financial transaction data. It ingests raw financial records, cleans and structures them, stores them in analytics-ready formats, and enables SQL-based analysis and dashboarding.
 
-This project focuses on a **minimum viable product (MVP)** emphasizing data engineering, cloud infrastructure, and analytical workflows.
+The focus is on building a minimum viable product (MVP) that demonstrates core data engineering skills, including cloud infrastructure, ETL pipelines, data modeling, and analytical workflows.
 
----
+Key Questions
 
-## Research Questions
+How do spending patterns change over time?
 
-1. How does night shift training affect running performance and recovery compared to a regular day schedule?
-2. How does training volume (e.g., mileage or intensity) impact next-day performance?
-3. How has overall running fitness changed over time?
+How do different expense categories impact cash flow and savings?
 
----
+How has overall financial health evolved over time?
 
-## Architecture
+Architecture
 
-The project follows a layered data architecture to separate raw ingestion, cleaning, and analytics:
+Raw Financial Files
+→ Amazon S3 (Bronze – Raw Data)
+→ Python ETL (EC2) - potentially move to lambda in future
+→ Amazon S3 (Silver – Cleaned)
+→ Amazon RDS (PostgreSQL – Gold Analytics Layer)
+→ SQL Queries
+→ Power BI Dashboards
 
-COROS TSX Files  
-→ Amazon S3 (Bronze – Raw Data)  
-→ Python ETL (EC2) 
-→ Amazon S3 (Silver – Cleaned Parquet)  
-→ Amazon RDS (PostgreSQL – Gold Analytics Layer)  
-→ SQL Queries  
-→ PowerBI Dashboard
+Data Layers
+Bronze (Raw)
 
----
+Original financial transaction files (CSV, OFX, bank exports)
 
-## Data Layers
+Stored in Amazon S3
 
-### Bronze (Raw)
-- Original COROS `.tsx` activity files
-- Stored in Amazon S3
-- Immutable and preserved for reprocessing
+Immutable and preserved for reprocessing
 
-### Silver (Cleaned)
-- Parsed and cleaned activity data
-- Stored in Amazon S3 using **Parquet** format
-- Standardized schema and timestamps
+Silver (Cleaned)
 
-### Gold (Analytics)
-- Curated relational tables in PostgreSQL
-- Optimized for SQL queries and dashboards
+Parsed and standardized transaction-level data
 
----
+Normalized timestamps, currencies, and categories
 
-## Technologies Used
+Gold (Analytics)
 
-- **Cloud:** AWS (EC2, S3, RDS, IAM)
-- **Infrastructure as Code:** Terraform
-- **ETL / Processing:** Python (pandas, pyarrow)
-- **Storage Format:** Parquet
-- **Database:** PostgreSQL (AWS RDS)
-- **Analytics:** SQL
-- **Visualization:** PowerBI
-- **Version Control:** Git & GitHub
+Curated relational tables in PostgreSQL
 
----
+Optimized for SQL queries and BI tools
 
-## ETL Process
+Technologies Used
 
-1. Upload raw COROS `.tsx` files to Amazon S3 (Bronze)
-2. Parse and clean data using Python:
-   - Normalize timestamps
-   - Extract distance, pace, and heart rate metrics
-   - Label training periods (day shift vs night shift)
-3. Write cleaned data to Amazon S3 as Parquet (Silver)
-4. Load curated tables into PostgreSQL (Gold)
+Cloud: AWS (S3, EC2, RDS, IAM)
 
----
+Infrastructure as Code: Terraform
 
-## Analytics & Insights
+ETL / Processing: Python (pandas, pyarrow)
+
+Storage Format: Parquet
+
+Database: PostgreSQL (Amazon RDS)
+
+Analytics: SQL
+
+Visualization: Power BI
+
+Version Control: Git & GitHub
+
+ETL Workflow
+
+Upload raw financial files to Amazon S3 (Bronze)
+
+Process data with Python:
+
+Normalize timestamps and currencies
+
+Categorize transactions (income vs expenses)
+
+Clean and validate records
+
+Write cleaned data to Amazon S3 as Parquet (Silver)
+
+Load analytics-ready tables into PostgreSQL (Gold)
+
+Analytics & Insights
 
 Example analyses include:
-- Performance and recovery comparison between night shift and day shift periods
-- Relationship between training volume and next-day running performance
-- Long-term trends in fitness indicators over time
 
-These analyses are exposed through SQL queries and visualized using PowerBI dashboards.
+Spending trends by category
 
----
+Income vs expense (cash flow) analysis
 
-## Infrastructure
+Savings rate over time
 
-All cloud infrastructure for this project is provisioned using **Terraform** and deployed on **AWS**.
+Long-term financial health indicators
 
-### AWS Resources
+Insights are queried using SQL and visualized using Power BI dashboards.
 
-- **Amazon S3**
-  - Stores raw COROS `.tsx` files (Bronze layer)
-  - Stores cleaned, analytics-ready Parquet files (Silver layer)
+Infrastructure
 
-- **Amazon RDS (PostgreSQL)**
-  - Serves as the relational analytics database (Gold layer)
-  - Optimized for SQL queries and dashboard consumption
+All cloud infrastructure for this project is provisioned using Terraform and deployed on AWS.
 
-- **IAM Roles & Policies**
-  - Secure access between S3, ETL processes, and the database
-  - No credentials are hard-coded or stored in the repository
+AWS Resources
 
-### Infrastructure as Code
+Amazon S3: Raw and cleaned data storage (Bronze and Silver layers)
 
-Terraform configuration files are stored in the `infra/` directory and define:
-- S3 buckets
-- RDS instance
-- IAM roles and permissions
+Amazon RDS (PostgreSQL): Relational analytics database (Gold layer)
+
+IAM Roles and Policies: Secure access between services
 
 Terraform state files and credentials are excluded from version control to ensure security.
-
-This approach ensures the infrastructure is **reproducible, auditable, and environment-agnostic**.
-
----
-
-## Project Status
-
-**Current Phase:** MVP  
-- Core data pipeline implemented
-- Initial SQL analyses and dashboards completed
-
-**Planned Enhancements:**
-- Machine learning models for fatigue or performance prediction
-- Anomaly detection for recovery metrics
-- Natural language querying using LLMs
-
----
-
-## Disclaimer
-
-This project uses personal fitness data for educational and portfolio purposes only.
-

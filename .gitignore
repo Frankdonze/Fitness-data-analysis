@@ -1,6 +1,9 @@
 .venv
 aws/
-*.tcx
+*.CSV
+*.csv
+*.csv.enc
+secretkey.txt
 !data/exampledata/*.tcx
 .terraform/
 *.tfstate
